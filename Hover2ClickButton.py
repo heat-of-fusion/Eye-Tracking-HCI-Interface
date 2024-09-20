@@ -220,7 +220,7 @@ class TextButton(Hover2ClickButton):
 
             else:
                 try:
-                    new_text =  prev_text + double_jaum_dict[HCI_Agent.double_jaum_buffer + self.first_text]
+                    new_text = prev_text + double_jaum_dict[HCI_Agent.double_jaum_buffer + self.first_text]
 
                 except:
                     new_text = prev_text
