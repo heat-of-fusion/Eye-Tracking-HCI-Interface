@@ -1,15 +1,17 @@
 import os
+import time
 import HCI_Agent
 import threading
 import playsound
 import pyautogui
 import clipboard
+import webbrowser
 from gtts import gTTS
 from jamo import h2j, j2hcj
 from unicode import join_jamos
 from Hover2ClickButton import Hover2ClickButton, TextButton
 
-from utils import *
+from utils import blinkdecorator
 
 class ResetButton(Hover2ClickButton):
     '''
@@ -95,10 +97,25 @@ class TTSButton(Hover2ClickButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.playing = False
+
         return
 
-    @blinkdecorator
+    def play_tts(self):
+        self.playing = True
+        self.config(fg = self['bg'], bg = self['fg'])
+
+        playsound.playsound(f'./src/tts.mp3')
+
+        self.playing = False
+        self.config(fg = self['bg'], bg = self['fg'])
+
+        return
+
     def click_function(self):
+        if self.playing:
+            return
+
         text = HCI_Agent.text_var.get()
 
         if 'tts.mp3' in os.listdir(f'./src/'):
@@ -107,7 +124,7 @@ class TTSButton(Hover2ClickButton):
         tts = gTTS(text = text, lang = 'ko')
         tts.save(f'./src/tts.mp3')
 
-        threading.Thread(target = lambda: playsound.playsound(f'./src/tts.mp3')).start()
+        threading.Thread(target = self.play_tts).start()
 
         return
 
@@ -199,3 +216,117 @@ class KorEngButton(Hover2ClickButton):
         self.korean = False if self.korean else True
 
         return
+
+class OpacityButton(Hover2ClickButton):
+    '''
+    Change the opacity of the interface.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.minimum_opacity = 0.5 # Default minimum opacity
+
+        return
+
+    def set_minimum_opacity(self, minimum_opacity):
+        self.minimum_opacity = minimum_opacity
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        HCI_Agent.root.attributes('-alpha', 1.0 if HCI_Agent.transparent else self.minimum_opacity)
+        HCI_Agent.transparent = False if HCI_Agent.transparent else True
+
+        return
+
+class YouTubeButton(Hover2ClickButton):
+    '''
+    Open YouTube in browser.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        webbrowser.open(f'http://youtube.com')
+        time.sleep(0.5)
+        pyautogui.hotkey('win', 'up')
+
+        HCI_Agent.btn_list[-1][1].click_function()
+
+        return
+
+class VimiumButton(Hover2ClickButton):
+    '''
+    Browse the website with Vimium.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        if HCI_Agent.text_var.get() == '':
+            pyautogui.write(f'f')
+
+            return
+
+        pyautogui.write(HCI_Agent.text_var.get(), 0.01)
+        HCI_Agent.text_var.set('')
+
+        return
+
+class MinimizeButton(Hover2ClickButton):
+    '''
+    Minimize and lock the interface.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    def click_function(self):
+        '''
+        Minimize the window using tk.Frame.
+        '''
+
+        print(f'{self.__name__} Called!')
+
+        return
+
+class CommandButton(Hover2ClickButton):
+    '''
+    Turn the main interface to command mode.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    def click_function(self):
+        '''
+        Turn the main window to command window using tk.Frame.
+        '''
+
+        print(f'{self.__name__} Called!')
+
+        return
+
+text_button_map = {
+    'Space': SpaceButton,
+    '쌍자음': DoubleJaumButton,
+    '<': BackSpaceButton,
+    '한영': KorEngButton,
+    'TTS': TTSButton,
+    'Ent': EnterButton,
+    'Copy': CopyButton,
+    '투명도': OpacityButton,
+    '유튜브': YouTubeButton,
+    '탐색': VimiumButton,
+    '소형화': MinimizeButton,
+    '명령어': CommandButton
+}
