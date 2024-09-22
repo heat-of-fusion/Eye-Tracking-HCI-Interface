@@ -77,3 +77,16 @@ def blinkdecorator(func):
         return
 
     return wrapper
+
+def flatten(lists):
+    assert len(lists) > 0 or type(lists[0]) == list, 'Input list must be 2+ dimensioned shape.'
+
+    new_list = lists[0]
+    for list_chunk in lists[1:]:
+        new_list += list_chunk
+
+    return new_list
+
+if __name__ == '__main__':
+    dummy_list = [['1', '2', '3', '4'], ['5', '6', '7']]
+    print(flatten(dummy_list))

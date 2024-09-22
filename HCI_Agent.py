@@ -2,11 +2,13 @@ import tkinter as tk
 from ApplicationButtons import *
 from win32api import GetSystemMetrics
 
+from utils import flatten
+
 class HCIAgent():
     '''
     HCI GUI Speller Agent
     '''
-    def __init__(self, grid_Y = 5, grid_X = 11, btn_text = None, second_lang = None):
+    def __init__(self, btn_text = None, second_lang = None):
         global btn_list, root
 
         self.h_ratio = 0.5
@@ -16,8 +18,10 @@ class HCIAgent():
         self.btn_text = btn_text
         self.second_lang = second_lang
 
-        self.grid_Y = grid_Y
-        self.grid_X = grid_X
+        self.layout = [len(txt_list) for txt_list in self.btn_text]
+
+        self.grid_Y = len(self.layout)
+        self.grid_X = max([len(btn_list) for btn_list in self.btn_text])
 
         self.res_Y = int(GetSystemMetrics(1) * self.h_ratio)
         self.res_X = GetSystemMetrics(0)
@@ -67,22 +71,27 @@ class HCIAgent():
         self.exit_button.bind('<Enter>', self.exit_button.cursor_enter)
         self.exit_button.bind('<Leave>', self.exit_button.cursor_leave)
 
-        layout = [11, 10, 9, 7, 9]
-        margin_list = [(self.grid_X - val) * self.grid_width / 2 for val in layout]
+        # self.btn_text = [txt_list for txt_list in self.btn_text]
+        # self.second_lang = [txt_list for txt_list in self.second_lang]
 
-        for y, margin in zip(range(len(layout)), margin_list):
+        self.btn_text = flatten(self.btn_text)
+        self.second_lang = flatten(self.second_lang)
+
+        margin_list = [(self.grid_X - val) * self.grid_width / 2 for val in self.layout]
+
+        for y, margin in zip(range(len(self.layout)), margin_list):
             row = list()
 
-            for x in range(layout[y]):
-                Button = text_button_map[self.btn_text[sum(layout[:y]) + x]] if self.btn_text[sum(layout[:y]) + x] in text_button_map.keys() else TextButton
+            for x in range(self.layout[y]):
+                Button = text_button_map[self.btn_text[sum(self.layout[:y]) + x]] if self.btn_text[sum(self.layout[:y]) + x] in text_button_map.keys() else TextButton
 
-                btn = Button(root, text = f'{self.btn_text[sum(layout[:y]) + x]}', font = ('Arial', 30), bg = 'black', highlightthickness=0, bd=1, fg='white')
+                btn = Button(root, text = f'{self.btn_text[sum(self.layout[:y]) + x]}', font = ('Arial', 30), bg = 'black', highlightthickness=0, bd=1, fg='white')
                 btn.place(x = x * self.grid_width + margin, y = (self.res_Y * self.label_ratio) + y * self.grid_height, width = self.grid_width, height = self.grid_height)
                 btn.bind('<Enter>', btn.cursor_enter)
                 btn.bind('<Leave>', btn.cursor_leave)
 
-                if type(btn) == TextButton and self.second_lang[sum(layout[:y]) + x] is not None:
-                    btn.set_second_text(self.second_lang[sum(layout[:y]) + x])
+                if type(btn) == TextButton and self.second_lang[sum(self.layout[:y]) + x] is not None:
+                    btn.set_second_text(self.second_lang[sum(self.layout[:y]) + x])
 
                 row.append(btn)
 
@@ -114,21 +123,21 @@ def run_hci_agent():
         global speller
 
         btn_text = [
-            '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '<',
-            'ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ',
-            'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ',
-            'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ',
-            '쌍자음', '한영', '명령어', '유튜브', 'Space', '탐색', '투명도', '소형화', 'TTS'
+            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '<'],
+            ['', 'ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', ''],
+            ['', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', ''],
+            ['', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ', ''],
+            ['쌍자음', '한영', '명령어', '유튜브', 'Space', '탐색', '투명도', '소형화', 'TTS']
         ]
         # 완성: 쌍자음, 한영, Space, 투명도, TTS, 유튜브, 탐색
         # 미완: 명령어, 소형화
 
         eng_map = [
-            '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', None,
-            'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-            'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
-            'z', 'x', 'c', 'v', 'b', 'n', 'm',
-            None, None, None, None, None, None, None, None, None
+            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', None],
+            ['', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', ''],
+            ['', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ''],
+            ['', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ''],
+            [None, None, None, None, None, None, None, None, None]
         ]
 
         speller = HCIAgent(btn_text=btn_text, second_lang = eng_map)
