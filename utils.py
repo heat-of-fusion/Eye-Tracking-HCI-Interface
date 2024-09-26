@@ -36,8 +36,20 @@ double_moum_dict = {
     'ㅏㅣ': 'ㅐ',
     'ㅣㅓ': 'ㅐ',
     'ㅓㅣ': 'ㅔ',
-
 }
+
+command_set = [
+    'command_1',
+    'command_2',
+    'command_3',
+    'command_4',
+    'command_5',
+    'command_6',
+    'command_7',
+    'command_8',
+    'command_9',
+    'command_10',
+]
 
 class GhostCursor():
     '''

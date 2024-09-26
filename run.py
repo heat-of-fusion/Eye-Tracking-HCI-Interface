@@ -7,7 +7,7 @@ import mss, mss.tools
 from win32api import GetSystemMetrics
 
 def main():
-    speller_thread = threading.Thread(target = HCI_Agent.run_hci_agent)
+    speller_thread = threading.Thread(target = HCI_Agent.run_hci_app)
     eyetracker_thread = threading.Thread(target = lambda: os.system(f'eye_tracking.exe'))
 
     speller_thread.start()

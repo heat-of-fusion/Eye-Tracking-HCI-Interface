@@ -235,7 +235,7 @@ class OpacityButton(Hover2ClickButton):
 
     @blinkdecorator
     def click_function(self):
-        HCI_Agent.root.attributes('-alpha', 1.0 if HCI_Agent.transparent else self.minimum_opacity)
+        HCI_Agent.speller.attributes('-alpha', 1.0 if HCI_Agent.transparent else self.minimum_opacity)
         HCI_Agent.transparent = False if HCI_Agent.transparent else True
 
         return
@@ -287,6 +287,13 @@ class MinimizeButton(Hover2ClickButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.frame_to_show = None
+
+        return
+
+    def set_frame(self, frame):
+        self.frame_to_show = frame
+
         return
 
     def click_function(self):
@@ -294,25 +301,93 @@ class MinimizeButton(Hover2ClickButton):
         Minimize the window using tk.Frame.
         '''
 
-        print(f'{self.__name__} Called!')
+        HCI_Agent.speller.show_frame(HCI_Agent.speller.min_frame)
+
+        # HCI_Agent.speller.main_frame.place_forget()
+        # HCI_Agent.speller.min_frame.place()
 
         return
 
-class CommandButton(Hover2ClickButton):
+class MainButton(Hover2ClickButton):
     '''
-    Turn the main interface to command mode.
+    Maximize and lock the interface.
     '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.frame_to_show = None
 
         return
 
     def click_function(self):
         '''
-        Turn the main window to command window using tk.Frame.
+        Maximize the window using tk.Frame.
         '''
 
-        print(f'{self.__name__} Called!')
+        HCI_Agent.speller.show_frame(HCI_Agent.speller.main_frame)
+
+        # HCI_Agent.speller.main_frame.place()
+        # HCI_Agent.speller.min_frame.place_forget()
+
+        return
+
+class CommandButton(Hover2ClickButton):
+    '''
+    Maximize and lock the interface.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.frame_to_show = None
+
+        return
+
+    def click_function(self):
+        '''
+        Maximize the window using tk.Frame.
+        '''
+
+        HCI_Agent.speller.show_frame(HCI_Agent.speller.cmd_frame)
+
+        # HCI_Agent.speller.main_frame.place()
+        # HCI_Agent.speller.min_frame.place_forget()
+
+        return
+
+class CommandTextButton(Hover2ClickButton):
+    '''
+    Convert the given string to .mp3 file and play.
+    '''
+    def __init__(self, command, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.playing = False
+        self.command = command
+
+        return
+
+    def play_tts(self):
+        self.playing = True
+        self.config(fg = self['bg'], bg = self['fg'])
+
+        playsound.playsound(f'./src/tts.mp3')
+
+        self.playing = False
+        self.config(fg = self['bg'], bg = self['fg'])
+
+        return
+
+    def click_function(self):
+        if self.playing:
+            return
+
+        if 'tts.mp3' in os.listdir(f'./src/'):
+            os.remove(f'./src/tts.mp3')
+
+        tts = gTTS(text = self.command, lang = 'ko')
+        tts.save(f'./src/tts.mp3')
+
+        threading.Thread(target = self.play_tts).start()
 
         return
 
