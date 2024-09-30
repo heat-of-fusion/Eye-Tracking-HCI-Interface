@@ -1,3 +1,4 @@
+import pyautogui
 from Hover2ClickButton import *
 from win32api import GetSystemMetrics
 
@@ -102,3 +103,5 @@ def flatten(lists):
 if __name__ == '__main__':
     dummy_list = [['1', '2', '3', '4'], ['5', '6', '7']]
     print(flatten(dummy_list))
+
+keys = pyautogui.KEYBOARD_KEYS

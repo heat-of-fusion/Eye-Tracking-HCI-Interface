@@ -1,9 +1,12 @@
 import time
 import tkinter as tk
+
+import pyautogui
+
 from ApplicationButtons import *
 from win32api import GetSystemMetrics
 
-from utils import flatten, command_set
+from utils import flatten, command_set, keys
 
 # class HCIAgent():
 #     '''
@@ -131,6 +134,16 @@ class HCI_App(tk.Tk):
         frame.tkraise()
 
         return
+
+    def destroy_and_exit(self):
+        self.after(0, self._exit_app)
+
+        return
+
+    def _exit_app(self):
+        print(f'Gog Bay...')
+        self.destroy()
+        exit()
 
 
 class MainFrame(tk.Frame):
@@ -302,13 +315,35 @@ class MinimizedFrame(tk.Frame):
         self.res_Y = GetSystemMetrics(1)
         self.res_X = GetSystemMetrics(0)
 
-        # self.btn_width = int(self.res_X * (1 / 10))
-        self.btn_height = int(self.res_Y * (1 / 10))
+        self.frame_width = int(self.res_X * (1 / 8))
+        self.frame_height = int(self.res_Y * (1 / 5))
 
-        self.place(x = 0, y = 0, width = self.btn_height, height = self.btn_height)
+        self.split_ratio = 4
+
+        self.place(x = 0, y = 0, width = self.frame_width, height = self.frame_height)
+
+        self.leftbutton = LArrowButton(self, text = f'←', font = ('Arial', 30), bg = 'black', fg = 'white', highlightthickness = 0, bd = 1)
+        self.leftbutton.place(x = 0, y = 0, width = self.frame_width // self.split_ratio, height = self.frame_height)
+        self.leftbutton.bind('<Enter>', self.leftbutton.cursor_enter)
+        self.leftbutton.bind('<Leave>', self.leftbutton.cursor_leave)
+
+        self.rightbutton = RArrowButton(self, text = f'→', font = ('Arial', 30), bg = 'black', fg = 'white', highlightthickness = 0, bd = 1)
+        self.rightbutton.place(x = self.frame_width * (self.split_ratio - 1) / self.split_ratio, y = 0, width = self.frame_width // self.split_ratio, height = self.frame_height)
+        self.rightbutton.bind('<Enter>', self.rightbutton.cursor_enter)
+        self.rightbutton.bind('<Leave>', self.rightbutton.cursor_leave)
+
+        self.upbutton = UArrowButton(self, text = f'↑', font = ('Arial', 30), bg = 'black', fg = 'white', highlightthickness = 0, bd = 1)
+        self.upbutton.place(x = self.frame_width // self.split_ratio, y = 0, width = self.frame_width * (self.split_ratio - 2) // self.split_ratio, height = self.frame_height // self.split_ratio)
+        self.upbutton.bind('<Enter>', self.upbutton.cursor_enter)
+        self.upbutton.bind('<Leave>', self.upbutton.cursor_leave)
+
+        self.downbutton = DArrowButton(self, text = f'↓', font = ('Arial', 30), bg = 'black', fg = 'white', highlightthickness = 0, bd = 1)
+        self.downbutton.place(x = self.frame_width // self.split_ratio, y = self.frame_height * (self.split_ratio - 1) / self.split_ratio, width = self.frame_width * (self.split_ratio - 2) // self.split_ratio, height = self.frame_height // self.split_ratio)
+        self.downbutton.bind('<Enter>', self.downbutton.cursor_enter)
+        self.downbutton.bind('<Leave>', self.downbutton.cursor_leave)
 
         self.btn = MainButton(self, text = f'대형화', font = ('Arial', 30), bg = 'white', fg='black', highlightthickness=0, bd=1)
-        self.btn.place(x = 0, y = 0, width = self.btn_height, height = self.btn_height)
+        self.btn.place(x = self.frame_width // self.split_ratio, y = self.frame_height // self.split_ratio, width = self.frame_width * (self.split_ratio - 2) // self.split_ratio, height = self.frame_height * (self.split_ratio - 2) // self.split_ratio)
         self.btn.bind('<Enter>', self.btn.cursor_enter)
         self.btn.bind('<Leave>', self.btn.cursor_leave)
 
@@ -317,7 +352,7 @@ class MinimizedFrame(tk.Frame):
         return
 
     def set_geometry(self, master):
-        master.geometry(f'{self.btn_height}x{self.btn_height}+{self.res_X - self.btn_height}+{(self.res_Y - self.btn_height) // 2}')
+        master.geometry(f'{self.frame_width}x{self.frame_height}+{(self.res_X - self.frame_width) // 2}+{self.res_Y - self.frame_height}')
 
         return
 
@@ -376,9 +411,9 @@ def run_hci_app():
 
     btn_text = [
         ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '<'],
-        ['', 'ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', ''],
-        ['', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', ''],
-        ['', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ', ''],
+        ['창닫기', 'ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'Esc'],
+        ['탭닫기', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', '입력'],
+        ['', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ', 'Backspace'],
         ['쌍자음', '한영', '명령어', '유튜브', 'Space', '탐색', '투명도', '소형화', 'TTS']
     ]
     # 완성: 쌍자음, 한영, Space, 투명도, TTS, 유튜브, 탐색

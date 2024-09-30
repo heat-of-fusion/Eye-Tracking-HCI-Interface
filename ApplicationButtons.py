@@ -40,7 +40,7 @@ class ExitButton(Hover2ClickButton):
     @blinkdecorator
     def click_function(self):
         HCI_Agent.exit_flag = True
-        HCI_Agent.speller.destroy()
+        HCI_Agent.speller.destroy_and_exit()
 
         return
 
@@ -157,6 +157,22 @@ class CopyButton(Hover2ClickButton):
     @blinkdecorator
     def click_function(self):
         clipboard.copy(HCI_Agent.text_var.get())
+
+        return
+
+class CopyPasteButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        clipboard.copy(HCI_Agent.text_var.get())
+        pyautogui.hotkey('ctrl', 'v')
 
         return
 
@@ -391,6 +407,132 @@ class CommandTextButton(Hover2ClickButton):
 
         return
 
+class CloseTabButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.hotkey('ctrl', 'w')
+
+        return
+class CloseWindowButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.hotkey('alt', 'f4')
+
+        return
+class EscapeButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.press('esc')
+
+        return
+
+class BackspaceButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.press('backspace')
+
+        return
+
+class LArrowButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.set_stay_time(1.0)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.press('left')
+
+        return
+
+class RArrowButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.set_stay_time(1.0)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.press('right')
+
+        return
+
+class UArrowButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.set_stay_time(0.25)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.press('up')
+
+        return
+
+class DArrowButton(Hover2ClickButton):
+    '''
+    Copy the given string to the clipboard.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.set_stay_time(0.25)
+
+        return
+
+    @blinkdecorator
+    def click_function(self):
+        pyautogui.press('down')
+
+        return
+
 text_button_map = {
     'Space': SpaceButton,
     '쌍자음': DoubleJaumButton,
@@ -403,5 +545,14 @@ text_button_map = {
     '유튜브': YouTubeButton,
     '탐색': VimiumButton,
     '소형화': MinimizeButton,
-    '명령어': CommandButton
+    '명령어': CommandButton,
+    '입력': CopyPasteButton,
+    '탭닫기': CloseTabButton,
+    '창닫기': CloseWindowButton,
+    'Esc': EscapeButton,
+    'Backspace': BackspaceButton,
+    '←': LArrowButton,
+    '→': RArrowButton,
+    '↑': UArrowButton,
+    '↓': DArrowButton
 }
