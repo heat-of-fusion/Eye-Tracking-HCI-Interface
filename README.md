@@ -1,16 +1,24 @@
 # Eye-Tracking HCI System for ALS Patients
 
 ## Developer
+
 Jehyeon Park
 
+<hr/>
+
 ## Demo Video
+
 [![Demo Video](https://i.ytimg.com/an_webp/A2_LJ5xm0UU/mqdefault_6s.webp?du=3000&sqp=CLrp6LcG&rs=AOn4CLChs2dyG1GY2mX35V8oXcYcPOmL9A)](https://www.youtube.com/watch?v=A2_LJ5xm0UU)
 
 <a href = 'https://www.youtube.com/watch?v=A2_LJ5xm0UU'>Youtube Hyperlink</a>
 
+<hr/>
+
 ## Abstract
 
 - Developing Eye-Tracker-based HCI system for motor-diabled and ALS patients.
+
+<hr/>
 
 ## Requirement
 
@@ -63,3 +71,5 @@ https://github.com/DigitalNatureGroup/TobiiEyeTracker.py
 ```
 https://github.com/kaniblu/hangul-utils
 ```
+
+<hr/>
