@@ -3,6 +3,11 @@
 ## Developer
 Jehyeon Park
 
+## Demo Video
+[![Demo Video](https://i.ytimg.com/an_webp/A2_LJ5xm0UU/mqdefault_6s.webp?du=3000&sqp=CLrp6LcG&rs=AOn4CLChs2dyG1GY2mX35V8oXcYcPOmL9A)](https://www.youtube.com/watch?v=A2_LJ5xm0UU)
+
+<a href = 'https://www.youtube.com/watch?v=A2_LJ5xm0UU'>Youtube Hyperlink</a>
+
 ## Abstract
 
 - Developing Eye-Tracker-based HCI system for motor-diabled and ALS patients.
@@ -22,13 +27,26 @@ Jehyeon Park
 
 ## Description
 
-- Now on development.
+- This project was developed with Python, and the GUI was implemented with Tkinter library.
+- The GUI engine was customized with ```Threading```, so I recommend you to run this project in well-performencing environment.
 
 <hr/>
 
 ## How to Start
 
-- Now on development
+1. Clone this repository to the directory where it is comfortable to access.
+2. Download ```eye_tracking.exe``` and ```tobii_stream_engine.dll``` from the repository from the first reference, and move them to the main directory.
+3. Calibration of the Eye Tracker from ```Tobii Experience``` application is recommended in each run.
+4. Run ```run.py```. 
+
+<hr/>
+
+## Policy
+
+- The purpose of this project is to develop Human-Computer-Interface system based on eye tracking for motor-disabled patients(especially ALS's)
+- This project would be developed step-by-step along the roadmap structured by my professor.
+- Each version would be uploaded in different repository.
+- You are free to clone and use this system personally, but commercial use is not allowed, due to the policy of Tobii.
 
 <hr/>
 
